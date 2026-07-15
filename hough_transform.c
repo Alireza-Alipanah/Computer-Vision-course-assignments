@@ -546,13 +546,23 @@ void vote_hough
 
 {
 long    i, j, r;       /* loop variables */
+long ci, cj, cnt;
 
 for (i=1; i<=nx; i++)
   for (j=1; j<=ny; j++)
     {
     /*!           TODO               !*/
     /*! SUPPLEMENT MISSING CODE HERE !*/
-
+    if (!u_mag[i][j]) continue;
+    for (r=r_min; r<=r_max; r++) {
+      cnt = c_list[r][0][0];
+      for (int c=0; c<cnt; c++) {
+        ci = i - ((long) c_list[r][c][0]);
+        cj = j - ((long) c_list[r][c][1]);
+        if (ci < 1 || cj <1 || ci >= nx || cj >= ny) continue;
+        h[r][ci][cj]++;
+      }
+    }
     /*!     END OF MISSING CODE      !*/
     }
 return;
@@ -1047,10 +1057,18 @@ printf("****************************************************************\n\n");
 /* ---- read input image (pgm format P5) ---- */
 
 /* read image name */
+// printf("original image:                                         ");
+// gets (in1);
+// printf("edge map:                                               ");
+// gets (in2);
 printf("original image:                                         ");
-gets (in1);
+if (fgets(in1, sizeof(in1), stdin) != NULL) {
+    in1[strcspn(in1, "\n")] = '\0';
+}
 printf("edge map:                                               ");
-gets (in2);
+if (fgets(in2, sizeof(in2), stdin) != NULL) {
+    in2[strcspn(in2, "\n")] = '\0';
+}
 
 /* open pgm file and read header */
 inimage = fopen(in1,"rb");
@@ -1095,15 +1113,24 @@ fclose(inimage);
 /* ---- read other parameters ---- */
 
 printf("maximum circle radius:                                 ");
-gets(row);  sscanf(row, "%ld", &r_max);
+// gets(row);  sscanf(row, "%ld", &r_max);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%ld", &r_max);
 printf("minimum circle radius:                                 ");
-gets(row);  sscanf(row, "%ld", &r_min);
+// gets(row);  sscanf(row, "%ld", &r_min);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%ld", &r_min);
 printf("Hough threshold t_hough [0..1]:                        ");
-gets(row);  sscanf(row, "%f", &t_hough);
+// gets(row);  sscanf(row, "%f", &t_hough);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%f", &t_hough);
 printf("output image (circles):                                ");
-gets(out1);
+// gets(out1);
+if (fgets(out1, sizeof(out1), stdin) != NULL) {
+    out1[strcspn(out1, "\n")] = '\0';
+}
 printf("output image (rescaled class map):                     ");
-gets(out2);
+// gets(out2);
+if (fgets(out2, sizeof(out2), stdin) != NULL) {
+    out2[strcspn(out2, "\n")] = '\0';
+}
 printf("\n");
 
 
