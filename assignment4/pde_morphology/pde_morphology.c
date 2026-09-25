@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 #include "libraries.h"
 
@@ -61,7 +62,12 @@ inline float dilation_point
  )
 //  computes one explicit time step of dilation at pixel (i,j)
 {
-  return /*! TODO !*/;
+  return sqrt (
+    sq(min(0, (u[i][j] - u[i-1][j]) * hx_1)) +
+    sq(max(0, (u[i+1][j] - u[i][j]) * hx_1)) +
+    sq(min(0, (u[i][j] - u[i][j-1]) * hy_1)) +
+    sq(max(0, (u[i][j+1] - u[i][j]) * hy_1))
+  ) * tau + u[i][j];
   /*! Supplement missing code here                                          !*/
   /*! attention: directly return the result, i.e. instead of compute x*y    !*/ 
   /*! write "return x*y;" to make this routine work                         !*/
@@ -130,7 +136,12 @@ inline float erosion_point
  )
 //  computes one explicit time step of erosion at pixel (i,j)
 {
-  return /*! TODO !*/;
+  return -sqrt (
+    sq(max(0, (u[i][j] - u[i-1][j]) * hx_1)) +
+    sq(min(0, (u[i+1][j] - u[i][j]) * hx_1)) +
+    sq(max(0, (u[i][j] - u[i][j-1]) * hy_1)) +
+    sq(min(0, (u[i][j+1] - u[i][j]) * hy_1))
+  ) * tau + u[i][j];
   /*! Supplement missing code here                                          !*/
   /*! attention: directly return the result, i.e. instead of compute x*y    !*/ 
   /*! write "return x*y;" to make this routine work                         !*/
@@ -480,7 +491,7 @@ void shock_filter
   /*! Supplement missing code here                                          !*/
   /*! i.e. assign "v_eta_eta > 0.0"and "v_eta_eta < 0.0" correctly          !*/
   /*! in the code below                                                     !*/
-  if ( /*! TODO !*/ )
+  if ( 0 )
     {
       /* dilation: upwind scheme */
       tmp1[i][j] = dilation_point(u1,tau,hx_1,hy_1,i,j);
@@ -488,7 +499,7 @@ void shock_filter
       if (color) tmp2[i][j] = dilation_point(u2,tau,hx_1,hy_1,i,j);
       if (color) tmp3[i][j] = dilation_point(u3,tau,hx_1,hy_1,i,j);
     }
-  else if ( /*! TODO !*/ )
+  else if ( 0 )
     {
       /* erosion: upwind scheme */
       tmp1[i][j] = erosion_point(u1,tau,hx_1,hy_1,i,j);
@@ -592,11 +603,15 @@ printf("****************************************************************\n\n");
 
 /* get information: color image or grayscale? */
 printf("Color [0=No, 1=Yes]:                                    ");
-gets(row); sscanf(row,"%d",&color);
+// gets(row); sscanf(row,"%d",&color);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%d", &color);
 
 /* get input image name */
 printf("input image:                                            ");
-gets(in);
+// gets(in);
+if (fgets(in, sizeof(in), stdin) != NULL) {
+    in[strcspn(in, "\n")] = '\0';
+}
 
 /* read image data */
 if (color==0)
@@ -617,7 +632,8 @@ else
 /* get information: what operation should be performed? */  
 printf("\n1 = Dilation, 2 = Erosion, 3 = ShockFiltering:        ");
 // printf("Select morphological operation:                         ");
-gets(row); sscanf(row,"%d",&selection);
+// gets(row); sscanf(row,"%d",&selection);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%d", &selection);
 
 /* check if selection is valid */
 if (selection<1||selection>3) {printf("Wrong selection\n"); exit(0);}
@@ -627,24 +643,31 @@ if (selection==3)
   {
   /* get sigma */
   printf("Presmoothing scale sigma:                        ");
-  gets(row); sscanf(row,"%f",&sigma);
+  // gets(row); sscanf(row,"%f",&sigma);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%f", &sigma);
 
   /* get rho */
   printf("Convolution scale rho:                           ");
-  gets(row); sscanf(row,"%f",&rho);
+  // gets(row); sscanf(row,"%f",&rho);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%f", &rho);
   }
 
 /* get time step size */
 printf("Evolution time step:                                    ");
-gets(row); sscanf(row,"%f",&tau);
+// gets(row); sscanf(row,"%f",&tau);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%f", &tau);
 
 /* get stopping time */
 printf("Total evolution time:                                   ");
-gets(row); sscanf(row,"%f",&T);
+// gets(row); sscanf(row,"%f",&T);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%f", &T);
 
 /* get output image name */
 printf("output image:                                           ");
-gets(out);
+// gets(out);
+if (fgets(out, sizeof(out), stdin) != NULL) {
+    out[strcspn(out, "\n")] = '\0';
+}
 
 
 /* -------------- C O M P U T A T I O N S ------------- */

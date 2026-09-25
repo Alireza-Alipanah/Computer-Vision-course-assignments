@@ -10,7 +10,7 @@ void read_pgm_header
 )
 /* reads PGM header */
 {
-    char row[80]; /* read buffer */
+    char row[300]; /* read buffer */
     FILE *file;   /* file pointer */
 
     /* try to open file */
@@ -87,7 +87,7 @@ void read_ppm_header
 )
 /* reads PGM header */
 {
-    char row[80]; /* read buffer */
+    char row[300]; /* read buffer */
     FILE *file;   /* file pointer */
 
     /* try to open file */
