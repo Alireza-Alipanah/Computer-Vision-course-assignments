@@ -342,6 +342,32 @@ void get_directions
 
 /*---------------------------------------------------------------------------*/
 
+void hessian_helper
+(
+  float **v,                 // presmoothed image, channel 1
+  float **H11,                // Hessian matrix, entry 11
+  float **H12,                // Hessian matrix, entry 12
+  float **H22,                // Hessian matrix, entry 22
+  int nx,                     // image size in x-direction
+  int ny,                     // image size in y-direction
+  float hx_2,                 // grid spacing in x-direction
+  float hy_2,                 // grid spacing in y-direction
+  float hxy                   // switch for color / gray images
+)
+
+{
+  int i;                        // loop variables
+  int j;                        // loop variables
+
+  for (i=1;i<=nx;i++)
+  for (j=1;j<=ny;j++)
+    {
+      H11[i][j] += (v[i+1][j] - 2 * v[i][j] + v[i-1][j]) * hx_2;
+      H22[i][j] += (v[i][j+1] - 2 * v[i][j] + v[i][j-1]) * hy_2;
+      H12[i][j] += (v[i+1][j+1] - v[i+1][j-1] - v[i-1][j+1] + v[i-1][j-1]) * hy_2;
+    }
+}
+
 void hessian
   (
   float **v1,                 // presmoothed image, channel 1
@@ -375,10 +401,15 @@ void hessian
  for (i=1;i<=nx;i++)
  for (j=1;j<=ny;j++)
   {
-  /*! TODO ! */
-  /*! Supplement missing code here                                          !*/
-  /*! i.e. compute the Hessian matrix                                       !*/
-  /*! for handling color images, check the routine structure_tensor         !*/
+  H11[i][j] = 0;
+  H22[i][j] = 0;
+  H12[i][j] = 0;
+  }
+
+  hessian_helper(v1, H11, H12, H22, nx, ny, hx_2, hy_2, hxy);
+  if (color) {
+    hessian_helper(v2, H11, H12, H22, nx, ny, hx_2, hy_2, hxy);
+    hessian_helper(v3, H11, H12, H22, nx, ny, hx_2, hy_2, hxy);
   }
 
 return;
@@ -485,13 +516,15 @@ void shock_filter
   /*! TODO                                                                  !*/
   /*! Supplement missing code here                                          !*/
   /*! i.e. compute the second order directional derivative v_eta_eta        !*/
+  v_eta_eta = (r1[i][j] * H11[i][j] + r2[i][j] * H12[i][j]) * r1[i][j] +
+              (r1[i][j] * H12[i][j] + r2[i][j] * H22[i][j]) * r2[i][j];
 
   /* update this pixel */
   /*! TODO                                                                  !*/
   /*! Supplement missing code here                                          !*/
   /*! i.e. assign "v_eta_eta > 0.0"and "v_eta_eta < 0.0" correctly          !*/
   /*! in the code below                                                     !*/
-  if ( 0 )
+  if ( v_eta_eta < 0 )
     {
       /* dilation: upwind scheme */
       tmp1[i][j] = dilation_point(u1,tau,hx_1,hy_1,i,j);
@@ -499,7 +532,7 @@ void shock_filter
       if (color) tmp2[i][j] = dilation_point(u2,tau,hx_1,hy_1,i,j);
       if (color) tmp3[i][j] = dilation_point(u3,tau,hx_1,hy_1,i,j);
     }
-  else if ( 0 )
+  else if ( v_eta_eta > 0 )
     {
       /* erosion: upwind scheme */
       tmp1[i][j] = erosion_point(u1,tau,hx_1,hy_1,i,j);
