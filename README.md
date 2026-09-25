@@ -52,3 +52,10 @@ For the third part, shock filtering was implemented for grayscale and color imag
 | <img src="./assets/bank.png" alt="bank original" width="400"> | <img src="./assets/bank_shock.png" alt="bank shock filter" width="400"> |
 | <img src="./assets/head.png" alt="head original" width="400"> | <img src="./assets/head_shock.png" alt="head shock filter" width="400"> |
 | <img src="./assets/finger.png" alt="finger original" width="400"> | <img src="./assets/finger_shock.png" alt="finger shock filter" width="400"> |
+
+# Assignment 5
+## Part one
+For the first part, Mean Curvature Motion was implemented.
+| Image | MCM |
+|:---------:|:---------:|
+| <img src="./assets/head.png" alt="head original" width="400"> | <img src="./assets/head_mcm.gif" alt="head MCM" width="400"> |
