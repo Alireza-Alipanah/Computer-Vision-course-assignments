@@ -44,3 +44,11 @@ For the second part, dilation and erosion operations on grascale images were imp
 |:---------:|:---------:|:---------:|
 | <img src="./assets/bank.png" alt="bank original" width="400"> | <img src="./assets/bank_dilation.png" alt="bank dilation" width="400"> | <img src="./assets/bank_erosion.png" alt="bank erosion" width="400"> |
 | <img src="./assets/head.png" alt="head original" width="400"> | <img src="./assets/head_dilation.png" alt="head dilation" width="400"> | <img src="./assets/head_erosion.png" alt="head erosion" width="400"> |
+##
+For the third part, shock filtering was implemented for grayscale and color images
+| Image | Shock filter |
+|:---------:|:---------:|
+| <img src="./assets/baboon.png" alt="baboon original" width="400"> | <img src="./assets/baboon_shock.png" alt="baboon shock filter" width="400"> |
+| <img src="./assets/bank.png" alt="bank original" width="400"> | <img src="./assets/bank_shock.png" alt="bank shock filter" width="400"> |
+| <img src="./assets/head.png" alt="head original" width="400"> | <img src="./assets/head_shock.png" alt="head shock filter" width="400"> |
+| <img src="./assets/finger.png" alt="finger original" width="400"> | <img src="./assets/finger_shock.png" alt="finger shock filter" width="400"> |
