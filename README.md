@@ -38,3 +38,9 @@ For the first part, Coherence-enhancing anisotropic diffusion (CED) was applied 
 | Image | CED 20 iterations | CED 200 iterations |
 |:---------:|:---------:|:---------:|
 | <img src="./assets/fabric.png" alt="fabric original" width="400"> | <img src="./assets/fabric_ced_itr20.png" alt="fabric ced 20 iterations" width="400"> | <img src="./assets/fabric_ced_itr200.png" alt="fabric ced 200 iterations" width="400"> |
+## Part two
+For the second part, dilation and erosion operations on grascale images were implemented.
+| Image | Dilation | Erosion |
+|:---------:|:---------:|:---------:|
+| <img src="./assets/bank.png" alt="bank original" width="400"> | <img src="./assets/bank_dilation.png" alt="bank dilation" width="400"> | <img src="./assets/bank_erosion.png" alt="bank erosion" width="400"> |
+| <img src="./assets/head.png" alt="head original" width="400"> | <img src="./assets/head_dilation.png" alt="head dilation" width="400"> | <img src="./assets/head_erosion.png" alt="head erosion" width="400"> |
