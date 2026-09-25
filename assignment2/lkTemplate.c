@@ -361,6 +361,8 @@ for(i=1; i<=nx; i++) {
 	 /* 
 	    SUPPLEMENT CODE HERE
 	 */
+    w5 = 1.0 / ht;
+    df_dz = w5 * (f2[i][j] - f1[i][j]);
 	 
 	 /* calculate matrix entries and right-hand side */
 	 dxx[i][j] = df_dx * df_dx;
@@ -369,6 +371,8 @@ for(i=1; i<=nx; i++) {
 	 /* 
 	    SUPPLEMENT CODE HERE 
 	 */
+    dxz[i][j] = df_dx * df_dz;
+    dyz[i][j] = df_dy * df_dz;
 
 
      }
@@ -383,6 +387,8 @@ if (rho > 0.0)
    /* 
       SUPPLEMENT CODE HERE
    */
+  gauss_conv (rho, nx, ny, hx, hy, 5.0, 0, dxz);
+  gauss_conv (rho, nx, ny, hx, hy, 5.0, 0, dyz);
    }
 
 return;
@@ -420,7 +426,19 @@ for(i=1; i<=nx; i++) {
 	/* 
 	   SUPPLEMENT CODE HERE
 	*/
-
+        u[i][j] = v[i][j] = c[i][j] = 0;
+        trace = dxx[i][j] + dyy[i][j];
+        if (trace < eps) continue;
+        det = dxx[i][j] * dyy[i][j] - dxy[i][j] * dxy[i][j];
+        if (det < eps) {
+            c[i][j] = 128;
+            u[i][j] = -dxz[i][j] / (dxx[i][j] + dyy[i][j]);
+            v[i][j] = -dyz[i][j] / (dxx[i][j] + dyy[i][j]);
+        } else {
+            c[i][j] = 256;
+            u[i][j] = (-dxz[i][j] * dyy[i][j] + dxy[i][j] * dyz[i][j]) / (dxx[i][j] * dyy[i][j] - dxy[i][j] * dxy[i][j]);
+            v[i][j] = (-dxz[i][j] - dxx[i][j] * u[i][j]) / dxy[i][j];
+        }
     }
 }
 
@@ -511,12 +529,14 @@ printf("  Send bug reports to                          \n");
 printf("  bruhn@vis.uni-stuttgart.de                   \n");
 printf("***********************************************\n\n");
 
-
 /* ---- read input image f1 (pgm format P5) ---- */
 
 /* read image name */
 printf("input image 1:                        ");
-gets (in1);
+// gets (in1);
+if (fgets(in1, sizeof(in1), stdin) != NULL) {
+    in1[strcspn(in1, "\n")] = '\0';
+}
 
 /* open pgm file and read header */
 inimage = fopen(in1,"rb");
@@ -540,7 +560,10 @@ fclose(inimage);
 
 /* read image name */
 printf("input image 2:                        ");
-gets (in2);
+// gets (in2);
+if (fgets(in2, sizeof(in2), stdin) != NULL) {
+    in2[strcspn(in2, "\n")] = '\0';
+}
 
 /* open pgm file and read header */
 inimage = fopen(in2,"rb");
@@ -563,13 +586,21 @@ fclose(inimage);
 /* ---- read other parameters ---- */
 
 printf("integration scale rho (>0):           ");
-gets(row);  sscanf(row, "%f", &rho);
+// gets(row);  sscanf(row, "%f", &rho);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%f", &rho);
 printf("threshold epsilon (>0):               ");
-gets(row);  sscanf(row, "%f", &eps);
+// gets(row);  sscanf(row, "%f", &eps);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%f", &eps);
 printf("output image (flow classification):   ");
-gets(out1);
+// gets(out1);
+if (fgets(out1, sizeof(out1), stdin) != NULL) {
+    out1[strcspn(out1, "\n")] = '\0';
+}
 printf("output image (flow magnitude):        ");
-gets(out2);
+// gets(out2);
+if (fgets(out2, sizeof(out2), stdin) != NULL) {
+    out2[strcspn(out2, "\n")] = '\0';
+}
 printf("\n");
 
 
