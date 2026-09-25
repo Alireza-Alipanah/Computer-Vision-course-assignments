@@ -25,3 +25,16 @@ For this assignment, Horn and Schunck method was used for Optical Flow Estimatio
 | <img src="./assets/pig1.png" alt="pig frame 1" width="400"> | <img src="./assets/pig2.png" alt="pig frame 2" width="400"> |
 | Flow magnitude |
 | <img src="./assets/hornschunck_flow_magnitude.png" alt="horn and schunck flow magnitude" width="400"> |
+
+# Assignment 4
+## Part one
+For the first part, Coherence-enhancing anisotropic diffusion (CED) was applied to images.
+| Image | CED |
+|:---------:|:---------:|
+| <img src="./assets/finger.png" alt="finger original" width="400"> | <img src="./assets/finger_ced.png" alt="finger ced" width="400"> |
+| <img src="./assets/sbrain.png" alt="sbrain original" width="400"> | <img src="./assets/sbrain_ced.png" alt="sbrain ced" width="400"> |
+| <img src="./assets/xmas.png" alt="xmas original" width="400"> | <img src="./assets/xmas_ced.png" alt="xmas ced" width="400"> |
+<!-- -->
+| Image | CED 20 iterations | CED 200 iterations |
+|:---------:|:---------:|:---------:|
+| <img src="./assets/fabric.png" alt="fabric original" width="400"> | <img src="./assets/fabric_ced_itr20.png" alt="fabric ced 20 iterations" width="400"> | <img src="./assets/fabric_ced_itr200.png" alt="fabric ced 200 iterations" width="400"> |
