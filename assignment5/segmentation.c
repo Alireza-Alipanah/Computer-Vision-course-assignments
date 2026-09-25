@@ -119,7 +119,11 @@ for (j=by;j<ny+by;j++)
   {
   /*! TODO !*/
   /*! compute the required derivatives vx,vy,vxx,vxy,vyy !*/
-
+    vx = hx_1 * (v[i][j] - v[i-1][j]);
+    vy = hy_1 * (v[i][j] - v[i][j-1]);
+    vxx = hx_2 * (v[i+1][j] - 2 * v[i][j] + v[i-1][j]);
+    vyy = hy_2 * (v[i][j+1] - 2 * v[i][j] + v[i][j-1]);
+    vxy = hxy4 * (v[i+1][j+1] - v[i+1][j-1] - v[i-1][j+1] + v[i-1][j-1]);
   /*!      !*/
 
   nabla_v_sq = vx * vx + vy * vy;
@@ -132,7 +136,7 @@ for (j=by;j<ny+by;j++)
     {
     /*! TODO !*/
     /*! compute the mean curvature motion update term !*/
-
+    mcm_update[i][j] = (vy * vy * vxx - 2 * vx * vy * vxy + vx * vx *vyy) / (vx * vx + vy * vy);
     /*!      !*/
     }
   }
@@ -262,10 +266,14 @@ FILE * ptr;
 
 /* get input image name */
 printf("\ninput image:                                            ");
-gets(in);
+// gets(in);
+if (fgets(in, sizeof(in), stdin) != NULL) {
+    in[strcspn(in, "\n")] = '\0';
+}
 
 printf("\npresmoothing scale sigma:                               ");
-gets(row); sscanf(row,"%f",&sigma);
+// gets(row); sscanf(row,"%f",&sigma);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%f", &sigma);
 
 bx = 1;
 by = 1;
@@ -281,23 +289,30 @@ read_pgm_data(in,pos,f,nx,ny,bx,by);
 alloc_matrix(&v,nx+2*bx,ny+2*by);
 
 printf("\ntime step:                                              ");
-gets(row); sscanf(row,"%f",&tau);
+// gets(row); sscanf(row,"%f",&tau);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%f", &tau);
 
 printf("\nStopping time:                                          ");
-gets(row); sscanf(row,"%f",&T);
+// gets(row); sscanf(row,"%f",&T);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%f", &T);
 
 printf("\nNumber of iterations between writes:                    ");
-gets(row); sscanf(row,"%d",&delta);
+// gets(row); sscanf(row,"%d",&delta);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%d", &delta);
 
 if (!strcmp(argv[1],"cv"))
   {
   printf("\nMCM weight lambda:                                      ");
-  gets(row); sscanf(row,"%f",&lambda);
+  // gets(row); sscanf(row,"%f",&lambda);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%f", &lambda);
   }
 lambda *= 65536;
 
 printf("\noutput image:                                           ");
-gets(out);
+// gets(out);
+if (fgets(out, sizeof(out), stdin) != NULL) {
+    out[strcspn(out, "\n")] = '\0';
+}
 
 if (!strcmp(argv[1],"cv"))
   {
