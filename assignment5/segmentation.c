@@ -52,6 +52,11 @@ for (j=by;j<ny+by;j++)
 
   /*! TODO !*/
   /*! compute the mean values "u_in" and "u_out" */
+  u_in  += H * f[i][j];
+  A_in  += H;
+
+  u_out += (1 - H) * f[i][j];
+  A_out += (1 - H);
 
   /*!      !*/
   }
@@ -64,7 +69,7 @@ for (j=by;j<ny+by;j++)
   {
   /*! TODO !*/
   /*! compute the coefficient "coeff" of intensity-driven motion */
-
+  coeff = sq(f[i][j] - u_out) - sq(f[i][j] - u_in);
   /*!      !*/
 
   if (coeff>0.0) //dilation
@@ -214,7 +219,7 @@ for (j=by;j<ny+by;j++)
   /*! implement the iteration step using "idm_update" and "mcm_update" !*/
   /*! ATTENTION use 1/lambda as idm coefficient for numerical stability !*/
   /*! using lambda as mcm coefficient leads to wrong results !*/
-
+  v[i][j] = v[i][j] + tau * ( mcm_update[i][j] + (1.0/lambda) * idm_update[i][j] );
   /*!      !*/
   }
 disalloc_matrix(mcm_update,nx+2*bx,ny+2*by);
