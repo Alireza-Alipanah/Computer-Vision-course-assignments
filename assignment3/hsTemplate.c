@@ -180,6 +180,37 @@ for (i=1; i<=nx; i++)
  SUPPLEMENT CODE
 */
 
+for (i=1; i<=nx; i++){
+ for (j=1; j<=ny; j++)
+     {
+          nn = 4 - ((i == 1 || i == nx) ? 1 : 0) - ((j == 1 || j == nx) ? 1 : 0);
+          u[i][j] = (
+                         -fx[i][j] * (fy[i][j] * v1[i][j] + fz[i][j]) + 
+                         alpha * (
+                              (i == 1 ? 0 : u1[i-1][j]) + 
+                              (i == nx ? 0 : u1[i+1][j]) + 
+                              (j == 1 ? 0 : u1[i][j-1]) + 
+                              (j == ny? 0 : u1[i][j+1])
+                         )
+                    ) / 
+                    (
+                         fx[i][j] * fx[i][j] + alpha * nn
+                    );
+          v[i][j] = (
+                         -fy[i][j] * (fx[i][j] * u1[i][j] + fz[i][j]) + 
+                         alpha * (
+                              (i == 1 ? 0 : v1[i-1][j]) + 
+                              (i == nx ? 0 : v1[i+1][j]) + 
+                              (j == 1 ? 0 : v1[i][j-1]) + 
+                              (j == ny? 0 : v1[i][j+1])
+                         )
+                    ) / 
+                    (
+                         fy[i][j] * fy[i][j] + alpha * nn
+                    );
+     }
+}
+
 
 /* ---- disallocate storage ---- */
 
@@ -277,7 +308,10 @@ printf("***********************************************\n\n");
 
 /* read image name */
 printf("input image 1:                    ");
-gets (in1);
+// gets (in1);
+if (fgets(in1, sizeof(in1), stdin) != NULL) {
+    in1[strcspn(in1, "\n")] = '\0';
+}
 
 /* open pgm file and read header */
 inimage = fopen(in1,"rb");
@@ -301,7 +335,10 @@ fclose(inimage);
 
 /* read image name */
 printf("input image 2:                    ");
-gets (in2);
+// gets (in2);
+if (fgets(in2, sizeof(in2), stdin) != NULL) {
+    in2[strcspn(in2, "\n")] = '\0';
+}
 
 /* open pgm file and read header */
 inimage = fopen(in2,"rb");
@@ -324,11 +361,16 @@ fclose(inimage);
 /* ---- read other parameters ---- */
 
 printf("smoothnes weight alpha (>0):      ");
-gets(row);  sscanf(row, "%f", &alpha);
+// gets(row);  sscanf(row, "%f", &alpha);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%f", &alpha);
 printf("number of iterations:             ");
-gets(row);  sscanf(row, "%ld", &kmax);
+// gets(row);  sscanf(row, "%ld", &kmax);
+fgets(row, sizeof(row), stdin);  sscanf(row, "%ld", &kmax);
 printf("output image (flow magnitude):    ");
-gets(out);
+// gets(out);
+if (fgets(out, sizeof(out), stdin) != NULL) {
+    out[strcspn(out, "\n")] = '\0';
+}
 printf("\n");
 
 
